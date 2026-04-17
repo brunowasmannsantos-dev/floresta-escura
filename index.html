@@ -1,9 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Aventura Interativa</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f0f0; }
+        .container { background: white; padding: 20px; border-radius: 10px; shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        button { margin: 10px; padding: 10px 20px; cursor: pointer; font-size: 16px; }
+        #btn-voltar { background-color: #ffcc00; border: none; }
+    </style>
+</head>
 <body>
-  <h1>Meu Trabalho de JavaScript</h1>
-  <script>
-    alert("Olá! O JavaScript está funcionando!");
-  </script>
+
+<div class="container">
+    <h1 id="titulo">Início da Aventura</h1>
+    <p id="descricao">Você está em uma floresta escura. Para onde você vai?</p>
+    
+    <div id="botoes">
+        <button onclick="proximoPasso('caverna')">Ir para a Caverna</button>
+        <button onclick="proximoPasso('castelo')">Ir para o Castelo</button>
+    </div>
+
+    <button id="btn-voltar" onclick="voltar()" style="display: none;">⬅ Voltar ao passo anterior</button>
+</div>
+
+<script>
+    // Aqui guardamos o histórico de onde o jogador passou
+    let historico = [];
+    
+    const cenas = {
+        'inicio': { titulo: "Início", desc: "Você está na floresta.", botoes: ['caverna', 'castelo'] },
+        'caverna': { titulo: "A Caverna", desc: "Está muito escuro aqui!", botoes: ['inicio'] },
+        'castelo': { titulo: "O Castelo", desc: "Um rei te recebe no portão.", botoes: ['inicio'] }
+    };
+
+    function proximoPasso(cenaNome) {
+        // Antes de mudar, salvamos a cena atual no histórico
+        const cenaAtual = document.getElementById('titulo').innerText.toLowerCase();
+        historico.push(cenaAtual === "início" ? "inicio" : cenaAtual);
+        
+        atualizarTela(cenaNome);
+    }
+
+    function atualizarTela(nome) {
+        const cena = cenas[nome];
+        document.getElementById('titulo').innerText = cena.titulo;
+        document.getElementById('descricao').innerText = cena.desc;
+
+        // Mostra o botão voltar apenas se houver histórico
+        document.getElementById('btn-voltar').style.display = historico.length > 0 ? "inline-block" : "none";
+    }
+
+    function voltar() {
+        if (historico.length > 0) {
+            const cenaAnterior = historico.pop(); // Remove e pega o último item do histórico
+            atualizarTela(cenaAnterior);
+        }
+    }
+</script>
+
 </body>
 </html>
